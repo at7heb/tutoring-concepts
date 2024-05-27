@@ -1,5 +1,6 @@
 defmodule SsTest.Concepts.ReadSound do
-  use Ash.Resource, domain: SsTest.SoundSpelling
+  # , data_layer: Ash.DataLayer.Ets
+  use Ash.Resource, domain: SsTest.SoundSpelling, data_layer: Ash.DataLayer.Ets
   #   data_layer: your_data_layer
 
   # postgres do
@@ -13,7 +14,11 @@ defmodule SsTest.Concepts.ReadSound do
   end
 
   actions do
-    defaults [:read, :destroy, create: :*, update: :*]
+    defaults [:read, :destroy, :create]
+
+    # create :create do
+    #   accept [:grapheme, :phoneme]
+    # end
   end
 
   attributes do
@@ -25,5 +30,13 @@ defmodule SsTest.Concepts.ReadSound do
       allow_nil? true
       public? true
     end
+  end
+
+  code_interface do
+    # define_for(SsTest.Elements)
+    define :create
+    define :read
+    define :by_phoneme, get_by: [:phoneme], action: :read
+    define :by_grapheme, get_by: [:grapheme], action: :read
   end
 end
